@@ -2,10 +2,22 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+st.cache_data.clear()
 conn = st.connection("gsheets", type=GSheetsConnection)
 existing_data = conn.read(worksheet="Lesson", usecols=list(range(6)))
+student_data = conn.read(worksheet="Client", usecols=list(range(7)))
+package_data = conn.read(worksheet="Lesson Package", usecols=list(range(4)))
 existing_data = existing_data.dropna(how="all")
 max_id = existing_data['ID'].max()
+
 
 with st.form(key="llctutoring_form"):
     studentName = st.text_input(label="Student Name*", )
