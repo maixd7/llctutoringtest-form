@@ -30,7 +30,7 @@ with st.form(key="llctutoring_form"):
     st.markdown("**required*")
 
     if submit_button:
-        if not studentName or tutorName or subject or lessonDate or notes:
+        if not (studentName or tutorName or subject or lessonDate or notes):
             st.warning("Ensure all mandatory fields are filled.")
             st.stop()
         else:
@@ -48,6 +48,18 @@ with st.form(key="llctutoring_form"):
                 ]
             )
             update_df = pd.concat([existing_data, form_data])
+            conn.update(worksheet = "Lesson", data=update_df)
+            # Identifying lesson package id
+            student_row = student_data[student_data["Student Name"] == studentName]
+            lesson_package_id = student_row.iloc[0]['Lesson Package id']
+            # Updating lesson package
+            package_row = package_data[package_data["id"] == lesson_package_id]
+            current_count = package_row.iloc[0]['Current Lesson Count']
+            new_count = current_count+1
+            package_data.loc[package_data["id"] == lesson_package_id, "Current Lesson Count"] = new_count
+            #Update spreadsheet
+            update_df = pd.concat([existing_data, form_data])
+            conn.update(worksheet="Lesson Package", data=package_data)
             conn.update(worksheet = "Lesson", data=update_df)
             st.cache_data.clear()
             
