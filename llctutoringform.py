@@ -39,8 +39,8 @@ with st.form(key="llctutoring_form"):
                 [
                     {
                         "ID": max_id+1,
-                        "Student Name": studentName,
-                        "Tutor Name": tutorName,
+                        "Student Name": studentName.title().strip(),
+                        "Tutor Name": tutorName.title().strip(),
                         "Subject": subject,
                         "Lesson Date": lessonDate,
                         "Notes": notes,
@@ -50,7 +50,7 @@ with st.form(key="llctutoring_form"):
             update_df = pd.concat([existing_data, form_data])
             conn.update(worksheet = "Lesson", data=update_df)
             # Identifying lesson package id
-            student_row = student_data[student_data["Student Name"] == studentName]
+            student_row = student_data[student_data["Student Name"] == studentName.title().strip()]
             lesson_package_id = student_row.iloc[0]['Lesson Package id']
             # Updating lesson package
             package_row = package_data[package_data["id"] == lesson_package_id]
