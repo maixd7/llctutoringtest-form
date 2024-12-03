@@ -12,7 +12,7 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 st.cache_data.clear()
 conn = st.connection("gsheets", type=GSheetsConnection)
-existing_data = conn.read(worksheet="Lesson", usecols=list(range(6)))
+existing_data = conn.read(worksheet="Lesson", usecols=list(range(7)))
 student_data = conn.read(worksheet="Client", usecols=list(range(7)))
 package_data = conn.read(worksheet="Lesson Package", usecols=list(range(4)))
 existing_data = existing_data.dropna(how="all")
@@ -35,6 +35,14 @@ with st.form(key="llctutoring_form"):
             st.stop()
         else:
             st.write("You have submitted")
+            # Identifying lesson package id
+            student_row = student_data[student_data["Student Name"] == studentName.title().strip()]
+            lesson_package_id = student_row.iloc[0]['Lesson Package id']
+            # Updating lesson package
+            package_row = package_data[package_data["id"] == lesson_package_id]
+            current_count = package_row.iloc[0]['Current Lesson Count']
+            new_count = current_count+1
+            package_data.loc[package_data["id"] == lesson_package_id, "Current Lesson Count"] = new_count
             form_data = pd.DataFrame(
                 [
                     {
@@ -44,21 +52,13 @@ with st.form(key="llctutoring_form"):
                         "Subject": subject,
                         "Lesson Date": lessonDate,
                         "Notes": notes,
+                        "Lesson Number": new_count
                     }
                 ]
             )
-            update_df = pd.concat([existing_data, form_data])
-            conn.update(worksheet = "Lesson", data=update_df)
-            # Identifying lesson package id
-            student_row = student_data[student_data["Student Name"] == studentName.title().strip()]
-            lesson_package_id = student_row.iloc[0]['Lesson Package id']
-            # Updating lesson package
-            package_row = package_data[package_data["id"] == lesson_package_id]
-            current_count = package_row.iloc[0]['Current Lesson Count']
-            new_count = current_count+1
-            package_data.loc[package_data["id"] == lesson_package_id, "Current Lesson Count"] = new_count
             #Update spreadsheet
             update_df = pd.concat([existing_data, form_data])
+            conn.update(worksheet = "Lesson", data=update_df)
             conn.update(worksheet="Lesson Package", data=package_data)
             conn.update(worksheet = "Lesson", data=update_df)
             st.cache_data.clear()
