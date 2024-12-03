@@ -52,7 +52,7 @@ with st.form(key="llctutoring_form"):
                         "Subject": subject,
                         "Lesson Date": lessonDate,
                         "Notes": notes,
-                        "Lesson Number": new_count
+                        "Lesson Number": current_count
                     }
                 ]
             )
