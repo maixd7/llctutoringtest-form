@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 from datetime import datetime
 import pandas as pd
+import pytz
 
 hide_st_style = """
             <style>
@@ -10,7 +11,9 @@ hide_st_style = """
             header {visibility: hidden;}
             </style>
             """
-current_date = datetime.now().date()
+pst = pytz.timezone('US/Pacific')
+current_date = datetime.now(pst).date()
+
 st.markdown(hide_st_style, unsafe_allow_html=True)
 st.cache_data.clear()
 conn = st.connection("gsheets", type=GSheetsConnection)
