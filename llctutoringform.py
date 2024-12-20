@@ -19,7 +19,7 @@ st.cache_data.clear()
 conn = st.connection("gsheets", type=GSheetsConnection)
 existing_data = conn.read(worksheet="Lesson", usecols=list(range(7)))
 student_data = conn.read(worksheet="Client", usecols=list(range(7)))
-package_data = conn.read(worksheet="Lesson Package", usecols=list(range(4)))
+package_data = conn.read(worksheet="Lesson Package", usecols=list(range(6)))
 existing_data = existing_data.dropna(how="all")
 max_id = existing_data['ID'].max()
 
