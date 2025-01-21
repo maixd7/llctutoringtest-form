@@ -46,22 +46,37 @@ with st.form(key="llctutoring_form", clear_on_submit=True):
                 lesson_package_id = student_row.iloc[0]['Lesson Package id']
                 # Updating lesson package
                 package_row = package_data[package_data["id"] == lesson_package_id]
-                current_count = package_row.iloc[0]['Current Lesson Count']
-                new_count = current_count+1
-                package_data.loc[package_data["id"] == lesson_package_id, "Current Lesson Count"] = new_count
-                form_data = pd.DataFrame(
-                    [
-                        {
-                            "ID": max_id+1,
-                            "Student Name": studentName.title().strip(),
-                            "Tutor Name": tutorName.title().strip(),
-                            "Subject": subject,
-                            "Lesson Date": lessonDate,
-                            "Notes": notes,
-                            "Lesson Number": new_count
-                        }
-                    ]
-                )
+                if package_row.iloc[0]['Lesson Package'] == 'SINGLE':
+                    form_data = pd.DataFrame(
+                        [
+                            {
+                                "ID": max_id+1,
+                                "Student Name": studentName.title().strip(),
+                                "Tutor Name": tutorName.title().strip(),
+                                "Subject": subject,
+                                "Lesson Date": lessonDate,
+                                "Notes": notes,
+                                "Lesson Number": 'SINGLE'
+                            }
+                        ]
+                    )
+                else:
+                    current_count = package_row.iloc[0]['Current Lesson Count']
+                    new_count = current_count+1
+                    package_data.loc[package_data["id"] == lesson_package_id, "Current Lesson Count"] = new_count
+                    form_data = pd.DataFrame(
+                        [
+                            {
+                                "ID": max_id+1,
+                                "Student Name": studentName.title().strip(),
+                                "Tutor Name": tutorName.title().strip(),
+                                "Subject": subject,
+                                "Lesson Date": lessonDate,
+                                "Notes": notes,
+                                "Lesson Number": new_count
+                            }
+                        ]
+                    )
                 #Update spreadsheet
                 update_df = pd.concat([existing_data, form_data])
                 conn.update(worksheet = "Lesson", data=update_df)
@@ -69,7 +84,7 @@ with st.form(key="llctutoring_form", clear_on_submit=True):
                 conn.update(worksheet = "Lesson", data=update_df)
                 st.cache_data.clear()
             except IndexError:
-                st.error("Invalid student name: " + studentName + " not found.")
+                st.error("Invalid student name: " + studentName + " not found. Contact phoner number")
             
         
         
