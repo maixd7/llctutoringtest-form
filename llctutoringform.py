@@ -60,7 +60,6 @@ with st.form(key="llctutoring_form", clear_on_submit=True):
                             }
                         ]
                     )
-                    print("yes")
                 else:
                     current_count = package_row.iloc[0]['Current Lesson Count']
                     new_count = current_count+1
@@ -78,7 +77,6 @@ with st.form(key="llctutoring_form", clear_on_submit=True):
                             }
                         ]
                     )
-                    print("no")
                 #Update spreadsheet
                 update_df = pd.concat([existing_data, form_data])
                 conn.update(worksheet = "Lesson", data=update_df)
