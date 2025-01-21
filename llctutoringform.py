@@ -84,7 +84,7 @@ with st.form(key="llctutoring_form", clear_on_submit=True):
                 conn.update(worksheet = "Lesson", data=update_df)
                 st.cache_data.clear()
             except IndexError:
-                st.error("Invalid student name: " + studentName + " not found. Contact phoner number")
+                st.error("Invalid student name: " + studentName + " not found. Contact phone number")
             
         
         
