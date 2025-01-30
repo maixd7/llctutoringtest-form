@@ -25,8 +25,8 @@ max_id = existing_data['ID'].max()
 
 
 with st.form(key="llctutoring_form", clear_on_submit=True):
-    studentName = st.text_input(label="Student Name*", )
-    tutorName = st.text_input(label="Tutor Name*")
+    studentName = st.text_input(label="Student Name (First Name)*", )
+    tutorName = st.text_input(label="Tutor Name (First Name)*")
     subject = st.text_input(label="Subject*")
     lessonDate = st.date_input(label="Lesson Date*", value=current_date)
     notes = st.text_input(label="Notes:*")
